@@ -27,7 +27,7 @@ Running the script `python python-playground/medium_blog.py` will prompt for any
 ```bash
 Enter the Medium Blog URL (e.g., https://rschu.me): https://rschu.me
 Processing Blog articles from: https://rschu.me
-Found 113 articles so far [-]
+Found 113 articles so far                [/]
 
 ------------------
 113 Articles found
