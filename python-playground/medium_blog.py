@@ -35,6 +35,13 @@ def spinner():
             yield character
 
 
+def status_loader_text(articles_found, spinner_char):
+    """Prints a message with a right-aligned spinner."""
+    base_text = "Found {} articles so far"
+    filler_spaces = max(0, 40 - len(base_text.format(articles_found)))
+    return f"\r{base_text.format(articles_found)}{filler_spaces*' '} [{spinner_char}]"
+
+
 def main():
     # ----- Site configuration -----
     scroll_pause_time = 2
@@ -94,13 +101,6 @@ def main():
         # Extract articles from the page.
         articles = soup.find_all("article")
         for article in articles:
-
-            print(
-                f"\rFound {len(articles_data)} articles so far [{next(spin)}]",
-                end="",
-                flush=True,
-            )
-
             link_url = ""
             publishing_date = "not-found"
             links = article.find_all("a")
@@ -131,6 +131,12 @@ def main():
                         "published": publishing_date,
                     }
                 )
+
+        print(
+            f"\r{status_loader_text(len(articles_data), next(spin))}",
+            end="",
+            flush=True,
+        )
 
     # ----- Results -----
     result_text = f"{len(articles_data)} Articles found"
