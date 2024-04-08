@@ -72,11 +72,6 @@ def main():
         for _ in range(scrolls_before_check):
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(scroll_pause_time)
-            print(
-                f"\rFound {len(articles_data)} articles so far [{next(spin)}]",
-                end="",
-                flush=True,
-            )
 
         html_content = driver.page_source
         soup = BeautifulSoup(html_content, "html.parser")
