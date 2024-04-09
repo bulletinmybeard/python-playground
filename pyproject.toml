@@ -24,3 +24,6 @@ coverage = "^7.4.4"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+medium_blog = "python-playground.web-scraping.medium_blog:main"

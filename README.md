@@ -21,7 +21,7 @@ This project's dependencies are managed by Poetry. See the `pyproject.toml` file
 ## Medium Blog Scraper: Extract Titles, Links, and Publishing Dates
 A simple Python script for scraping and compiling a list of article metadata from any Medium blog. By utilizing Selenium and BeautifulSoup to navigate and parse articles through infinite scroll pages, we extract titles, links, and publication dates and store this information in comma-separated text files (e.g., `blog_articles_rschu.me.csv`).
 
-Running the script `python python-playground/medium_blog.py` will prompt for any Medium blog URL, including the discontinued custom Medium Blog domains. 
+Running the script `poetry run medium_blog` will prompt for any Medium blog URL, including the discontinued custom Medium Blog domains. 
 
 ### Valid Medium Blog URL and content
 ```bash
