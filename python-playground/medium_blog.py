@@ -141,30 +141,32 @@ def main():
     # ----- Results -----
     result_text = f"{len(articles_data)} Articles found"
     separator_line = "-" * len(result_text)
+
     print(f"\n\n{separator_line}")
     print(result_text)
     print(f"{separator_line}")
+
     if len(articles_data) > 0:
         print("\nExample:")
         print("Title: ", articles_data[0]["title"])
         print("Link: ", articles_data[0]["link"])
         print("Published at: ", articles_data[0]["published"])
 
-    try:
-        # Save the result to a CSV file.
-        domain_name = urlparse(blog_url).netloc
-        csv_filename = f"blog_articles_{domain_name}.csv"
+        try:
+            # Save the result to a CSV file.
+            domain_name = urlparse(blog_url).netloc
+            csv_filename = f"blog_articles_{domain_name}.csv"
 
-        with open(csv_filename, "w", newline="") as csvfile:
-            fieldnames = ["title", "link", "published"]
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            with open(csv_filename, "w", newline="") as csvfile:
+                fieldnames = ["title", "link", "published"]
+                writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
-            writer.writeheader()
-            writer.writerows(articles_data)
+                writer.writeheader()
+                writer.writerows(articles_data)
 
-            print(f"\nCSV file created: {os.path.abspath(csv_filename)}")
-    except Exception as e:
-        print(f"Error: {str(e)}")
+                print(f"\nCSV file created: {os.path.abspath(csv_filename)}")
+        except Exception as e:
+            print(f"Error: {str(e)}")
 
     # Close the browser.
     driver.quit()
