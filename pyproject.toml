@@ -1,17 +1,19 @@
 [tool.poetry]
-name = "python-playground"
+name = "python_playground"
 version = "0.1.0"
 description = ""
 authors = ["Robin Schulz <hello@rschu.me>"]
 license = "MIT"
 readme = "README.md"
-packages = [{ include = "python-playground" }]
+packages = [{ include = "python_playground" }]
 
 [tool.poetry.dependencies]
 python = "^3.12"
 selenium = "^4.19.0"
 fake-useragent = "^1.5.1"
 beautifulsoup4 = "^4.12.3"
+pydantic = "^2.7.0"
+pyyaml = "^6.0.1"
 
 [tool.poetry.group.dev.dependencies]
 types-beautifulsoup4 = "^4.12.0.20240229"
@@ -20,10 +22,43 @@ isort = "^5.13.2"
 flake8 = "^7.0.0"
 mypy = "^1.9.0"
 coverage = "^7.4.4"
+types-pyyaml = "^6.0.12.20240311"
+flake8-pyproject = "^1.2.3"
+types-selenium = "^3.141.9"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.black]
+line-length = 100
+target-version = ['py312']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+
+[tool.flake8]
+max-line-count = 600
+max-line-length = 100
+
+[tool.coverage.run]
+branch = true
+source = ["audit_logger"]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+
+[tool.mypy]
+python_version = 3.12
+check_untyped_defs = true
+ignore_missing_imports = true
+disallow_untyped_defs = true
+plugins = "pydantic.mypy"
+follow_imports = "silent"
+strict = true
+
 [tool.poetry.scripts]
-medium_blog = "python-playground.web-scraping.medium_blog:main"
+medium_blog = "python_playground.web_scraping.medium_blog:main"
+read_yaml_config = "python_playground.utils.read_yaml_config:main"
