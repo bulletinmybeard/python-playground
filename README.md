@@ -59,7 +59,7 @@ The given URL 'https://rschume' appears to be invalid.
 ```
 
 ## Read YAML config file
-This utils function is designed to read and validate a YAML configuration file.
+This utils helper is designed to read and validate YAML files.
 It utilizes the Pydantic library to enforce type checking and validation for the [config.yaml](python_playground/assets/config.yaml) file.
 ```bash
 # poetry run read_yaml_config
