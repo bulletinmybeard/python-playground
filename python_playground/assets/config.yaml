@@ -1,0 +1,83 @@
+# Application Basic Settings.
+app:
+  name: MyPythonApp
+  version: "1.0.0"
+  description: "A versatile Python application for various utilities."
+  mode: development
+
+# Server Configuration.
+server:
+  host: "127.0.0.1"
+  port: 8080
+  enable_ssl: false
+  ssl_certificate: /path/to/ssl/certificate.pem
+
+# Database Configuration.
+database:
+  type: sqlite
+  sqlite:
+    path: /path/to/database.db
+  mysql:
+    host: localhost
+    port: 3306
+    username: user
+    password: password
+    database_name: mydb
+  postgresql:
+    host: localhost
+    port: 5432
+    username: user
+    password: password
+    database_name: mydb
+
+# Logging Configuration.
+logging:
+  level: DEBUG
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  log_file: logs/app.log
+  rotate_logs: true
+  max_log_size: 10MB
+  backup_count: 5
+
+# Feature Toggles.
+features:
+  enable_feature_x: true
+  enable_feature_y: false
+  experimental_features:
+    - alpha_feature
+    - beta_feature
+
+# External Services.
+external_services:
+  service_x:
+    api_key: 3DEHJQQSTVWXXZcdeipqsv
+    base_url: https://api.service_x.com
+    timeout_seconds: 30
+  service_y:
+    api_key: 3DEHJQQSTVWXXZcdeipqsv
+    username: user
+    password: pass
+    base_url: https://api.service_y.com
+
+# Environment Specific Settings.
+environments:
+  development:
+    debug_mode: true
+    external_services:
+      service_x:
+        api_key: devkey
+  production:
+    debug_mode: false
+    external_services:
+      service_x:
+        api_key: prodkey
+
+# Custom Configurations for Testing.
+custom:
+  parameter1: value1
+  list_of_values:
+    - list_item_1
+    - list_item_2
+  nested_config:
+    sub_config1: sub_value1
+    sub_config2: "123"

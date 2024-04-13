@@ -2,7 +2,7 @@ import csv
 import os
 import re
 import time
-from typing import Any
+from typing import Any, Generator
 from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
@@ -12,7 +12,7 @@ from selenium import webdriver
 ua: Any = UserAgent()
 
 
-def is_valid_url(url):
+def is_valid_url(url: str) -> bool:
     # Check for a valid scheme and netloc.
     parsed_url = urlparse(url)
     if not parsed_url.scheme or not parsed_url.netloc:
@@ -29,30 +29,31 @@ def is_valid_url(url):
     return re.match(regex, url) is not None
 
 
-def spinner():
+def spinner() -> Generator[str, None, None]:
     while True:
         for character in "|/-\\":
             yield character
 
 
-def status_loader_text(articles_found, spinner_char):
+def status_loader_text(articles_found: int, spinner_char: str) -> str:
     """Prints a message with a right-aligned spinner."""
     base_text = "Found {} articles so far"
     filler_spaces = max(0, 40 - len(base_text.format(articles_found)))
     return f"\r{base_text.format(articles_found)}{filler_spaces*' '} [{spinner_char}]"
 
 
-def main():
+def main() -> None:
     # ----- Site configuration -----
     scroll_pause_time = 2
     scrolls_before_check = 2
     default_blog_url = "https://rschu.me"
-    blog_url = input(f"Enter the Medium Blog URL (e.g., {default_blog_url}): ").strip("/") or default_blog_url
+    blog_url = (
+        input(f"Enter the Medium Blog URL (e.g., {default_blog_url}): ").strip("/")
+        or default_blog_url
+    )
 
     if not is_valid_url(blog_url):
-        print(
-            f"The given URL '{blog_url}' appears to be invalid.", end="", flush=True
-        )
+        print(f"The given URL '{blog_url}' appears to be invalid.", end="", flush=True)
         exit(0)
 
     spin = spinner()
@@ -71,13 +72,13 @@ def main():
     driver.get(blog_url)
 
     # ----- Scrolling and data extraction -----
-    last_height = driver.execute_script("return document.body.scrollHeight")
+    last_height = driver.execute_script("return document.body.scrollHeight")  # type: ignore
     articles_data = []
 
     while True:
         # Scroll to the bottom of the page.
         for _ in range(scrolls_before_check):
-            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")  # type: ignore
             time.sleep(scroll_pause_time)
 
         html_content = driver.page_source
@@ -93,7 +94,7 @@ def main():
             exit(0)
 
         # Check if we've reached the end of the page.
-        new_height = driver.execute_script("return document.body.scrollHeight")
+        new_height = driver.execute_script("return document.body.scrollHeight")  # type: ignore
         if new_height == last_height:
             break
         last_height = new_height
@@ -115,8 +116,7 @@ def main():
                     break
 
             date_pattern = re.compile(
-                r"\bJan|Feb|Mar|Apr|May|Jun|Jul|"
-                r"Aug|Sep|Oct|Nov|Dec\b \d{1,2}, \d{4}"
+                r"\bJan|Feb|Mar|Apr|May|Jun|Jul|" r"Aug|Sep|Oct|Nov|Dec\b \d{1,2}, \d{4}"
             )
             date_tag = article.find(string=date_pattern)
             if date_tag:
