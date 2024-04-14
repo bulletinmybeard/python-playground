@@ -114,3 +114,7 @@ class ProjectConfig(BaseModel):
     external_services: Optional[ExternalServicesConfig] = Field(default=None, description="External services configuration")
     environments: Optional[EnvironmentsConfig] = Field(description="Environment specific settings")
     custom: Optional[CustomConfig] = Field(default=None, description="Custom configurations for testing")
+
+    # Forbid extra fields and raise an exception if any are found.
+    class Config:
+        extra = "forbid"
