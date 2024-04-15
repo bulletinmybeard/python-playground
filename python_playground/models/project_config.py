@@ -63,7 +63,7 @@ class LoggingConfig(BaseModel):
     format: str = Field(description="Logging format")
     log_file: str = Field(description="Path to log file")
     rotate_logs: Optional[bool] = Field(default=False, description="Flag to enable log rotation")
-    max_log_size: Optional[str] = Field(
+    max_log_size: Optional[int] = Field(
         default=1000, description="Maximum log file size before rotation"
     )
     backup_count: Optional[int] = Field(default=10, description="Number of backup logs to keep")
