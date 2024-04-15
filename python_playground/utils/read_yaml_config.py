@@ -39,7 +39,7 @@ class ConfigManager:
             return None
 
     @classmethod
-    def get_config(cls) -> ProjectConfig:
+    def get_config(cls) -> Optional[ProjectConfig]:
         """
         Access the loaded configuration. Ensures configuration is loaded.
         """

@@ -14,6 +14,8 @@ fake-useragent = "^1.5.1"
 beautifulsoup4 = "^4.12.3"
 pydantic = "^2.7.0"
 pyyaml = "^6.0.1"
+requests = "^2.31.0"
+httpx = "^0.27.0"
 
 [tool.poetry.group.dev.dependencies]
 types-beautifulsoup4 = "^4.12.0.20240229"
@@ -25,6 +27,7 @@ coverage = "^7.4.4"
 types-pyyaml = "^6.0.12.20240311"
 flake8-pyproject = "^1.2.3"
 types-selenium = "^3.141.9"
+types-requests = "^2.31.0.20240406"
 
 [build-system]
 requires = ["poetry-core"]
@@ -62,3 +65,4 @@ strict = true
 [tool.poetry.scripts]
 medium_blog = "python_playground.web_scraping.medium_blog:main"
 read_yaml_config = "python_playground.utils.read_yaml_config:main"
+github_stats = "python_playground.utils.github_stats:main"
