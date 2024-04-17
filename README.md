@@ -3,28 +3,31 @@
 My Git repository for tinkering with Python – from simple scripts to fun mini-projects.
 
 ## Table of Contents
+
 * [Prerequisites](#prerequisites)
 * [Medium Blog Scraper](#medium-blog-scraper-extract-titles-links-and-publishing-dates)
   * [Valid Medium Blog URL and content](#valid-medium-blog-url-and-content)
   * [Invalid Medium Blog URL](#invalid-medium-blog-url)
   * [Invalid URL](#invalid-url)
 * [Read YAML config file](#read-yaml-config-file)
+* [Fetch GitHub Repository Stats](#fetch-github-repository-stats)
 * [License](#license)
 
-
 ## Prerequisites
+
 This project's dependencies are managed by Poetry. See the `pyproject.toml` file for a complete list.
 
 * **Poetry:** 1.8.2 or later. See installation instructions at https://python-poetry.org/docs/#installation
 * **Python:** 3.12 or later.
 
-
 ## Medium Blog Scraper: Extract Titles, Links, and Publishing Dates
+
 A Python script for scraping and compiling a list of article metadata from any Medium blog. By utilizing Selenium and BeautifulSoup to navigate and parse articles through infinite scroll pages, we extract titles, links, and publication dates and store this information in comma-separated text files (e.g., `blog_articles_rschu.me.csv`).
 
-Running the script `poetry run medium_blog` will prompt for any Medium blog URL, including the discontinued custom Medium Blog domains. 
+Running the script `poetry run medium_blog` will prompt for any Medium blog URL, including the discontinued custom Medium Blog domains.
 
 ### Valid Medium Blog URL and content
+
 ```bash
 # poetry run medium_blog
 Enter the Medium Blog URL (e.g., https://rschu.me): https://rschu.me
@@ -44,6 +47,7 @@ CSV file created: .../blog_articles_rschu.me.csv
 ```
 
 ### Invalid Medium Blog URL
+
 ```bash
 # poetry run medium_blog
 Enter the Medium Blog URL (e.g., https://rschu.me): https://google.com
@@ -52,6 +56,7 @@ Processing Blog articles from: https://google.com
 ```
 
 ### Invalid URL
+
 ```bash
 # poetry run medium_blog
 Enter the Medium Blog URL (e.g., https://rschu.me): https://rschume
@@ -59,8 +64,10 @@ The given URL 'https://rschume' appears to be invalid.
 ```
 
 ## Read YAML config file
+
 This utils helper is designed to read and validate YAML files.
 It utilizes the Pydantic library to enforce type checking and validation for the [config.yaml](python_playground/assets/config.yaml) file.
+
 ```bash
 # poetry run read_yaml_config
 Config:  {
@@ -168,5 +175,30 @@ Config:  {
 }
 ```
 
+## Fetch GitHub Repository Stats
+The script requires a GitHub username, repository name, and API token,
+all of which can be provided via script arguments or prompts.
+
+> If arguments are missing, the script will prompt for them.
+
+| Argument               |                                                                                                   |
+|:-----------------------|:--------------------------------------------------------------------------------------------------|
+| `-u` or `--username`   | GitHub username                                                                                   |
+| `-r` or `--repository` | GitHub repository name                                                                            |
+| `-t` or `--token`      | GitHub API token                                                                                  |
+| `-m` or `--metrics`    | Comma-separated list of metrics data to process (e.g., rate_limit, user_info, traffic_views, etc. |
+
+```bash
+# With prompts.
+poetry run github_stats
+
+# Without prompts.
+poetry run github_stats --repo <github_repository> --token <github_api_token> --metrics "user_info"
+
+# Only the token and metrics will be prompted.
+poetry run github_stats --repo <github_repository>
+```
+
 ## License
+
 This project is licensed under the [MIT License](LICENSE) - see the LICENSE file for details.

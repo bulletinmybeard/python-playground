@@ -1,4 +1,3 @@
-import sys
 import argparse
 import json
 from typing import Any, Dict, List, Tuple, Union
@@ -15,7 +14,8 @@ from python_playground.models.github_stats import (
     TrafficViewsData,
 )
 
-valid_data_items = [
+# Available metrics data to fetch.
+valid_metrics_data = [
     "rate_limit",
     "user_info",
     "traffic_views",
@@ -29,18 +29,30 @@ parser.add_argument("-u", "--username", required=False, help="GitHub username", 
 parser.add_argument("-r", "--repository", required=False, help="GitHub repository name", type=str)
 parser.add_argument("-t", "--token", required=False, help="GitHub API token", type=str)
 parser.add_argument(
-    "-d",
-    "--data",
+    "-m",
+    "--metrics",
     required=False,
-    help="Comma-separated list of data to process: rate_limit, user_info, traffic_views, etc.",
+    help="Comma-separated list of metrics data "
+    "to process: rate_limit, user_info, traffic_views, etc.",
     type=str,
 )
 
 args = parser.parse_args()
 
-username = args.username if args.username else input("Please enter your GitHub username: ")
-repository = args.repository if args.repository else input("Please enter your GitHub repository name: ")
-token = args.token if args.token else input("Please enter your GitHub API token: ")
+# If script arguments are missing, the script will prompt for them.
+input_username = args.username if args.username else input("Enter your GitHub username: ")
+input_repository = (
+    args.repository if args.repository else input("Enter your GitHub repository name: ")
+)
+input_token = args.token if args.token else input("Enter your GitHub API token: ")
+input_metrics = (
+    args.metrics
+    if args.metrics
+    else input(
+        "Provide a comma-separated list of metrics data "
+        "to process or leave it empty for all metrics data: "
+    )
+)
 
 
 class CustomJSONEncoder(json.JSONEncoder):
@@ -53,18 +65,18 @@ class CustomJSONEncoder(json.JSONEncoder):
 
 
 class GitHubApiClient:
-
-    process_data_items: List[str] = []
-
     """GitHub REST API client."""
 
-    def __init__(self, username: str, repo: str, token: Union[str, None] = None):
+    process_metrics_items: List[str] = []
+
+    def __init__(self, username: str, repo: str, token: str, metrics: str):
         self.username = username
         self.repo = repo
+        self.metrics = metrics
         self.base_url = "https://api.github.com"
         self.session = Session()
         self.session.headers.update({"Authorization": f"token {token}"} if token else {})
-        self.process_arg_data()
+        self.process_metrics_options()
 
     def request(self, path: str, requires_repo: bool = True) -> Union[Any, Response]:
         """Handle REST API requests."""
@@ -108,21 +120,20 @@ class GitHubApiClient:
             List[TrafficPopularReferrersData], self.request("traffic/popular/referrers")
         )
 
-    def process_arg_data(self) -> None:
+    def process_metrics_options(self) -> None:
         """Process each item in the comma separated list."""
-        # data_items = self.process_data_items
-        if args.data:
-            data_items = []
-            options = args.data.split(",")
+        if self.metrics:
+            metrics_data = []
+            options = self.metrics.split(",")
             for option in options:
                 item = option.strip().lower()
-                if item not in valid_data_items or item in data_items:
+                if item not in valid_metrics_data or item in metrics_data:
                     print(f"Invalid data item: {item} (skip)")
                 else:
-                    data_items.append(item)
-            self.process_data_items = data_items
+                    metrics_data.append(item)
+            self.process_metrics_items = metrics_data
         else:
-            self.process_data_items = valid_data_items
+            self.process_metrics_items = valid_metrics_data
 
     @staticmethod
     def transform_response(data: Any) -> Union[Any, Tuple[Dict[Any, Any], ...]]:
@@ -141,9 +152,9 @@ class GitHubApiClient:
 
 
 def main() -> None:
-    client = GitHubApiClient(username, repository, token)
+    client = GitHubApiClient(input_username, input_repository, input_token, input_metrics)
 
-    data_methods = {
+    metrics_options = {
         "traffic_clones": client.get_traffic_clones,
         "traffic_views": client.get_traffic_views,
         "rate_limit": client.get_rate_limit,
@@ -154,9 +165,10 @@ def main() -> None:
 
     stdout: Dict[str, Any] = {"traffic": {}}
 
-    for data_item in client.process_data_items:
-        if data_item in data_methods:
-            response = data_methods[data_item]()
+    for data_item in client.process_metrics_items:
+        if data_item in metrics_options:
+            # Run the REST API requests and transform the response.
+            response = metrics_options[data_item]()
             if "traffic" in data_item:
                 key = data_item.replace("traffic_", "")
                 stdout["traffic"][key] = client.transform_response(response)
