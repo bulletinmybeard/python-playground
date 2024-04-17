@@ -1,3 +1,4 @@
+import sys
 import argparse
 import json
 from typing import Any, Dict, List, Tuple, Union
@@ -24,18 +25,22 @@ valid_data_items = [
 ]
 
 parser = argparse.ArgumentParser(description="GitHub Statistics Collector")
-parser.add_argument("-u", "--username", required=True, help="GitHub username", type=str)
-parser.add_argument("-r", "--repo", required=True, help="GitHub repository name", type=str)
-parser.add_argument("-t", "--token", required=True, help="GitHub API token", type=str)
+parser.add_argument("-u", "--username", required=False, help="GitHub username", type=str)
+parser.add_argument("-r", "--repository", required=False, help="GitHub repository name", type=str)
+parser.add_argument("-t", "--token", required=False, help="GitHub API token", type=str)
 parser.add_argument(
     "-d",
     "--data",
     required=False,
-    help="Comma separated list of data to process: rate_limit, user_info, traffic_views, etc.",
+    help="Comma-separated list of data to process: rate_limit, user_info, traffic_views, etc.",
     type=str,
 )
 
 args = parser.parse_args()
+
+username = args.username if args.username else input("Please enter your GitHub username: ")
+repository = args.repository if args.repository else input("Please enter your GitHub repository name: ")
+token = args.token if args.token else input("Please enter your GitHub API token: ")
 
 
 class CustomJSONEncoder(json.JSONEncoder):
@@ -136,7 +141,7 @@ class GitHubApiClient:
 
 
 def main() -> None:
-    client = GitHubApiClient(args.username, args.repo, args.token)
+    client = GitHubApiClient(username, repository, token)
 
     data_methods = {
         "traffic_clones": client.get_traffic_clones,
