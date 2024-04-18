@@ -11,6 +11,7 @@ My Git repository for tinkering with Python – from simple scripts to fun mini-
   * [Invalid URL](#invalid-url)
 * [Read YAML config file](#read-yaml-config-file)
 * [Fetch GitHub Repository Stats](#fetch-github-repository-stats)
+* [Audit Log Helper Class](#audit-log-helper-class)
 * [License](#license)
 
 ## Prerequisites
@@ -198,6 +199,59 @@ poetry run github_stats --repo <github_repository> --token <github_api_token> --
 # Only the token and metrics will be prompted.
 poetry run github_stats --repo <github_repository>
 ```
+
+## Audit Log Helper Class
+This class is supposed to be used with The [log-audits-to-elasticsearch](https://github.com/bulletinmybeard/log-audits-to-elasticsearch) project.
+
+```bash
+poetry run audit_log_helper
+```
+
+```python
+audit_logger = AuditLogger(
+  api_url="<audit_logger_api_url>",
+  api_key="<audit_logger_api_key>",
+)
+
+# Push multiple audit log events to a collection.
+audit_logger.log_event(
+  event_name="role_delete",
+  application_name="intranet",
+  module="login-frontend",
+  action="delete-all",
+)
+audit_logger.log_event(
+  event_name="role_update",
+  application_name="intranet",
+  module="login-frontend",
+  action="update",
+)
+audit_logger.log_event(
+  event_name="role_update",
+  application_name="intranet",
+  module="login-frontend",
+  action="update",
+)
+audit_logger.log_event(
+  event_name="role_update",
+  application_name="intranet",
+  module="login-frontend",
+  action="update",
+)
+# Run bulk request against `POST /create-bulk` API endpoint with all items from the collection.
+response_bulk = audit_logger.send_batch()
+print("log_event__send_batch: ", response_bulk)
+
+# Push a single audit log event to a collection and immediately send it to Elasticsearch.
+response_single = audit_logger.log_and_send_event(
+  event_name="role_delete",
+  application_name="intranet",
+  module="login-frontend",
+  action="delete-all",
+)
+print("log_and_send_event: ", response_single)
+```
+
 
 ## License
 

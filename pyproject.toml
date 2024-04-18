@@ -66,3 +66,4 @@ strict = true
 medium_blog = "python_playground.web_scraping.medium_blog:main"
 read_yaml_config = "python_playground.utils.read_yaml_config:main"
 github_stats = "python_playground.utils.github_stats:main"
+audit_log_helper = "python_playground.utils.audit_log_helper:main"
